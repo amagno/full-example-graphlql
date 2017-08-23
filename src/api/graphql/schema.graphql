@@ -1,0 +1,29 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+type Mutation {
+    addUser(input: UserInput): User
+    updateUser(id: ID!, input: UserInput): User
+    deleteUser(id: ID!): DeleteReturn
+}
+type Query {
+    users(email: String, name: String): [User]
+    user(id: ID!): User
+}
+input UserInput {
+    name: String
+    email: String
+    password: String
+}
+type User {
+    id: ID!
+    name: String
+    email: String
+    password: String
+}
+type DeleteReturn {
+    id: ID!
+    message: String
+    error: Boolean
+}

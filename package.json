@@ -1,0 +1,38 @@
+{
+  "name": "apollo-test",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:4000/",
+  "dependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-inline-import": "^2.0.6",
+    "babel-preset-env": "^1.6.0",
+    "babel-runtime": "^6.23.0",
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.3",
+    "express": "^4.15.3",
+    "express-graphql": "^0.6.6",
+    "graphql": "^0.10.1",
+    "graphql-tools": "^1.0.0",
+    "mongoose": "^4.10.6",
+    "react": "^15.6.1",
+    "react-apollo": "^1.4.14",
+    "react-dom": "^15.6.1",
+    "react-scripts": "1.0.11",
+    "serve-favicon": "^2.4.3"
+  },
+  "scripts": {
+    "start": "babel-node src/api/server.js",
+    "react": "react-scripts start",
+    "watch": "npm-run-all --parallel watch:*",
+    "watch:server": "nodemon src/api/server --exec babel-node",
+    "watch:react": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^4.0.2"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "verbose": false,
+  "ignore": ["node_modules"],
+  "env": {
+    "NODE_ENV": "development",
+    "PORT": 4000,
+    "BABEL_DISABLE_CACHE": 1,
+    "MONGO_URL": "mongodb://localhost:27017"
+  },
+  "execMap": {
+    "js": "babel-node"
+  },
+  "ext": ".js,.json,.graphql",
+  "watch": "./src/api"
+}
