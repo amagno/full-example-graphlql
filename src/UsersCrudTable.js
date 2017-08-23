@@ -10,6 +10,8 @@ export const updateUserMutation = gql`
             password: $password
         }) {
             id
+            error
+            message
         }
     }
 `
@@ -42,7 +44,14 @@ class UserRow extends React.Component {
                 email: props.email,
                 name: props.name,
                 password: props.password
-            }
+            },
+            user_undo: {
+                id: props.id,
+                email: props.email,
+                name: props.name,
+                password: props.password
+            },
+            status: {}
         }
         console.log(props)
         this.handleEdit = this.handleEdit.bind(this)
@@ -63,8 +72,7 @@ class UserRow extends React.Component {
         }
         const { id, name, email, password } = this.state.user
         try {
-            console.log(this.props)
-            await this.props.updateUserMutation({
+            let status = await this.props.updateUserMutation({
                 variables: {
                     id,
                     name,
@@ -72,13 +80,23 @@ class UserRow extends React.Component {
                     password
                 }
             })
+            status = status.data.updateUser
+            if(status.error) {
+                this.setState({
+                    ...this.state,
+                    editable: true,
+                    status
+                })
+            } else {
+                this.setState({
+                    ...this.state,
+                    editable: false,
+                    status
+                })
+            }
         } catch(error) {
             throw new Error(error)
         }
-        this.setState({
-            ...this.state,
-            editable: false
-        })
     }
     async handleDelete() {
         let confirm = window.confirm(`Confirm delete of user: ${this.state.user.name}?`)
@@ -103,8 +121,6 @@ class UserRow extends React.Component {
     handleChange(event) {
         const target = event.target.name
         const value = event.target.value
-        console.log(target)
-        console.log(value)
         this.setState({
             ...this.state,
             user: {
@@ -114,17 +130,24 @@ class UserRow extends React.Component {
         })
     }
     render() {
+        let error = this.state.status.error
+        let styleErrorInput = { borderColor: error ? 'red' : 'none' }
         const { editable } = this.state
         const { id, name, email, password } = this.state.user
         if(editable) {
             return (
                 <tr>
                     <td><input type="text" name="name" value={name} onChange={this.handleChange} /></td>
-                    <td><input type="text" name="email" value={email} onChange={this.handleChange} /></td>
+                    <td>
+                        <input type="text" style={styleErrorInput} name="email" value={email} onChange={this.handleChange} />
+                        {error ? (<span style={{ color: 'red', fontSize: '12px' }}> Duplicate E-mail </span>) : ''}
+                    </td>
                     <td><input type="text" name="password" value={password} onChange={this.handleChange} /></td>                    
                     <td><button onClick={() => this.handleSave()}>Save</button></td>
-                    <td><button onClick={() => this.setState({ ...this.state, editable: false })}>Cancel</button></td> 
-                </tr>               
+                    <td><button onClick={() => {
+                        this.setState({ ...this.state, user: this.state.user_undo, editable: false })
+                        }}>Cancel</button></td>
+                </tr>              
             )
         }
 
@@ -141,6 +164,7 @@ class UserRow extends React.Component {
 }
 
 const UserTableRow = compose(
+    graphql(usersQuery, { name: 'usersQuery' }),
     graphql(updateUserMutation, { name: 'updateUserMutation' }),
     graphql(deleteUserMutation, { name: 'deleteUserMutation' })
 )(UserRow)

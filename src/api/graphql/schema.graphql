@@ -3,9 +3,9 @@ schema {
     mutation: Mutation
 }
 type Mutation {
-    addUser(input: UserInput): User
-    updateUser(id: ID!, input: UserInput): User
-    deleteUser(id: ID!): DeleteReturn
+    addUser(input: UserInput): Status
+    updateUser(id: ID!, input: UserInput): Status
+    deleteUser(id: ID!): Status
 }
 type Query {
     users(email: String, name: String): [User]
@@ -22,8 +22,8 @@ type User {
     email: String
     password: String
 }
-type DeleteReturn {
-    id: ID!
+type Status {
+    id: ID
     message: String
     error: Boolean
 }

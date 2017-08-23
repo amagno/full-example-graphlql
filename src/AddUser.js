@@ -1,7 +1,6 @@
 import React from 'react'
 import { gql, graphql } from'react-apollo'
-import { UserListQuery } from './UserList'
-
+import { usersQuery } from './UsersCrudTable'
 
 
 
@@ -12,7 +11,8 @@ class AddUser extends React.Component {
         this.state = {
             name: '',
             email: '',
-            password: ''
+            password: '',
+            status: {}
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -26,20 +26,28 @@ class AddUser extends React.Component {
         event.preventDefault()
 
         try {
-            await this.props.mutate({
+            let status = await this.props.mutate({
                 variables: {
                     name: this.state.name,
                     email: this.state.email,
                     password: this.state.password
                 },
-                update: (proxy, { data: { addUser } }) => {
-                    const data = proxy.readQuery({ query: UserListQuery })
-                    data.users.push(addUser)
-                    proxy.writeQuery({ query: UserListQuery, data })
-                }
+                refetchQueries: [{
+                    query: usersQuery
+                }]
+                // update: (proxy, { data: { addUser } }) => {
+                //     const data = proxy.readQuery({ query: UserListQuery })
+                //     data.users.push(addUser)
+                //     proxy.writeQuery({ query: UserListQuery, data })
+                // }
             })
+            status = status.data.addUser
+            this.setState({ 
+                ...this.state,
+                status
+            })           
         }catch(error) {
-            console.error(error)
+            
         }
     }
     render() {
@@ -56,6 +64,12 @@ class AddUser extends React.Component {
                 <input type="text" name="password" placeholder="Digite a senha..." onChange={this.handleChange} value={this.state.password} />
 
                 <button type="submit">Save</button>
+                {
+                    this.state.status.error ? 
+                    (<p style={{ cursor: 'pointer' }} onClick={() => this.setState({ ...this.state, status: { ...this.state.status, error: false }})}>
+                    {this.state.status.message}</p>) : 
+                    ''
+                }
             </form>
         )
     }
@@ -68,9 +82,8 @@ const AddUserQuery = gql`
             password: $password
         }) {
             id
-            name
-            email
-            password
+            error
+            message
         }
     }
 `

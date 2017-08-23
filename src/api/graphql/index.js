@@ -4,7 +4,15 @@ import schema from './schema.graphql'
 import User from '../models/user'
 
 const typeDefs = [ schema ]
-
+class Status {
+    constructor(error = false, message, id) {
+        return {
+            error,
+            message,
+            id
+        }
+    }
+}
 const searchUserByField  = (args) => {
     let fields = Object.keys(args) 
     let obj = {}
@@ -31,9 +39,9 @@ const resolvers = {
     Mutation: {
         addUser: async (_, { input }, context) => {
             try {
-                return await new User(input).save()
+                let user = await new User(input).save()
             } catch(error) {
-                throw new Error(error)
+                return new Status(true, error.message, undefined)
             }
         },
         updateUser: async (_, args, context) => {
@@ -41,24 +49,16 @@ const resolvers = {
             try {
                 return await User.findOneAndUpdate({ _id: args.id }, args.input).exec()
             } catch(error) {
-                throw new Error(error)
+                return new Status(true, error.message, args.id)
             }
         },
         deleteUser: async (_, args, context) => {
             
             try {
                 await User.findByIdAndRemove(args.id).exec()
-                return {
-                    error: false,
-                    message: 'Sucess',
-                    id: args.id
-                }
+                return new Status(false, 'Success', args.id)
             } catch(error) {
-                return {
-                    error: true,
-                    message: error.message,
-                    id: args.id
-                }
+                return new Status(true, error.message, args.id)
             }
             
         }
