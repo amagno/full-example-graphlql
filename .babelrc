@@ -4,7 +4,8 @@
     "babel-plugin-inline-import",
      ["transform-runtime", {
       "polyfill": false,
-      "regenerator": true
+      "regenerator": true,
+      "moduleName": "babel-runtime"
     }]
   ]
 }
