@@ -12,7 +12,10 @@ class AddUser extends React.Component {
             name: '',
             email: '',
             password: '',
-            status: {}
+            status: {
+                error: false,
+                message: ''
+            }
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -42,7 +45,7 @@ class AddUser extends React.Component {
                 status
             })           
         }catch(error) {
-            
+            return false
         }
     }
     render() {

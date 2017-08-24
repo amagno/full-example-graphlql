@@ -21,6 +21,9 @@
     "react-router": "^4.1.2",
     "react-router-dom": "^4.1.2"
   },
+  "engines": {
+    "node": ">=6.11.0"
+  },
   "scripts": {
     "start": "babel-node src/api/server.js",
     "react": "react-scripts start",

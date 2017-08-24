@@ -40,6 +40,7 @@ const resolvers = {
         addUser: async (_, { input }, context) => {
             try {
                 let user = await new User(input).save()
+                return new Status(false, 'sucess', user._id)
             } catch(error) {
                 return new Status(true, error.message, undefined)
             }

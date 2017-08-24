@@ -103,4 +103,6 @@ class Container extends React.Component {
 }
 
 
-export default graphql(usersQuery)(Container)
+export default graphql(usersQuery, {
+    options: { notifyOnNetworkStatusChange: true }
+})(Container)
