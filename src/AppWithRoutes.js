@@ -1,7 +1,6 @@
 import React from 'react';
 import { ApolloClient, createNetworkInterface, ApolloProvider } from 'react-apollo'
-import UsersTable from './components/UsersTable'
-
+import Routes from './Routes'
 
 //https://secure-sea-64020.herokuapp.com/graphql
 const client = new ApolloClient({
@@ -13,8 +12,6 @@ const client = new ApolloClient({
 
 export default () => (
   <ApolloProvider client={client}>
-    <div>
-      <UsersTable />
-    </div>
+    <Routes />
   </ApolloProvider>
 )

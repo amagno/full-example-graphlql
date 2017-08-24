@@ -1,39 +1,9 @@
 import React from 'react'
-import { graphql, gql, compose } from 'react-apollo'
+import { deleteUserMutation, updateUserMutation } from '../../apollo/mutations'
+import { usersQuery } from '../../apollo/queries'
+import { compose, graphql } from 'react-apollo'
 
 
-export const updateUserMutation = gql`
-    mutation updateUser($id: ID!, $name: String, $email: String, $password: String) {
-        updateUser(id: $id, input: {
-            name: $name
-            email: $email
-            password: $password
-        }) {
-            id
-            error
-            message
-        }
-    }
-`
-export const usersQuery = gql`
-    query usersQuery {
-        users {
-            id
-            name
-            email
-            password
-        }
-    }
-`
-export const deleteUserMutation = gql`
-    mutation deleteUserMutation($id: ID!) {
-        deleteUser(id: $id) {
-            error
-            message
-            id
-        }
-    }
-`
 class UserRow extends React.Component {
     constructor(props) {
         super(props)
@@ -53,7 +23,6 @@ class UserRow extends React.Component {
             },
             status: {}
         }
-        console.log(props)
         this.handleEdit = this.handleEdit.bind(this)
         this.handleSave = this.handleSave.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -66,7 +35,6 @@ class UserRow extends React.Component {
     }
     async handleSave() {
         let confirm = window.confirm('Tem certeza que deseja salvar ?')
-        console.log(`Update ID: ${this.state.user.id}`)
         if(!confirm) {
             return false
         }
@@ -133,7 +101,7 @@ class UserRow extends React.Component {
         let error = this.state.status.error
         let styleErrorInput = { borderColor: error ? 'red' : 'none' }
         const { editable } = this.state
-        const { id, name, email, password } = this.state.user
+        const { name, email, password } = this.state.user
         if(editable) {
             return (
                 <tr>
@@ -163,81 +131,8 @@ class UserRow extends React.Component {
     }
 }
 
-const UserTableRow = compose(
+export default compose(
     graphql(usersQuery, { name: 'usersQuery' }),
     graphql(updateUserMutation, { name: 'updateUserMutation' }),
     graphql(deleteUserMutation, { name: 'deleteUserMutation' })
 )(UserRow)
-
-
-const Table = ({ loading, users, filter, filterBy }) => {
-    
-    if(loading) {
-        return (<h1>Loading...</h1>)
-    }
-    let filteredUsers = users.filter(u => (
-        u[filterBy].toLowerCase().includes(filter.toLowerCase())
-    ))
-    return (
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>E-mail</th>
-                    <th>Password</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {filteredUsers.map(user => (
-                    <UserTableRow key={user.id} id={user.id} name={user.name} email={user.email} password={user.password}  />
-                ))}
-            </tbody>
-        </table>
-    )
-}
-
-
-class Container extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = { search: '', filterBy: 'email' }
-
-        this.handleSearch = this.handleSearch.bind(this)
-        this.handleFilterBy = this.handleFilterBy.bind(this)
-    }
-    handleSearch(event) {
-        const search = event.target.value
-
-        this.setState({
-            ...this.state,
-            search
-        })
-    }
-    handleFilterBy(event) {
-        const filterBy = event.target.value
-        this.setState({
-            ...this.state,
-            filterBy
-        })
-    }
-    render() {
-        const { loading, users } = this.props.data
-        const { search, filterBy } = this.state
-        return (
-            <div>
-                <label>Search: </label>
-                <input type="text" onChange={this.handleSearch} />
-                <select onChange={this.handleFilterBy}>
-                    <option value="email">E-mail</option>
-                    <option value="name">Name</option>
-                </select>
-                <Table loading={loading} users={users} filter={search} filterBy={filterBy} />
-            </div>
-        )
-    }    
-}
-
-
-export default graphql(usersQuery)(Container)

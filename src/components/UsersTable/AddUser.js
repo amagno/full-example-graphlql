@@ -1,7 +1,7 @@
 import React from 'react'
-import { gql, graphql } from'react-apollo'
-import { usersQuery } from './UsersCrudTable'
-
+import { graphql } from'react-apollo'
+import { addUserMutation } from '../../apollo/mutations'
+import { usersQuery } from '../../apollo/queries'
 
 
 class AddUser extends React.Component {
@@ -35,11 +35,6 @@ class AddUser extends React.Component {
                 refetchQueries: [{
                     query: usersQuery
                 }]
-                // update: (proxy, { data: { addUser } }) => {
-                //     const data = proxy.readQuery({ query: UserListQuery })
-                //     data.users.push(addUser)
-                //     proxy.writeQuery({ query: UserListQuery, data })
-                // }
             })
             status = status.data.addUser
             this.setState({ 
@@ -74,18 +69,6 @@ class AddUser extends React.Component {
         )
     }
 }
-const AddUserQuery = gql`
-    mutation addUser($name: String! $email: String! $password: String!) {
-        addUser(input: {
-            name: $name
-            email: $email
-            password: $password
-        }) {
-            id
-            error
-            message
-        }
-    }
-`
 
-export default graphql(AddUserQuery)(AddUser)
+
+export default graphql(addUserMutation)(AddUser)
