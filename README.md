@@ -1,17 +1,22 @@
 Exemplo de Fullstack com Node.js
 =================
-### Utilizando Express, GraphQL, React, Apollo entre outrs libs
+### Utilizando Express, GraphQL, React, Apollo entre outras libs
 ![Heroku](http://heroku-badge.herokuapp.com/?app=angularjs-crypto&style=flat)
 
 
 [Demo on heroku](https://rocky-gorge-32768.herokuapp.com/) 
 
 
-## Executanto localmente
-> - Certifique-se de ter o [Node.js](https://nodejs.org/) 6.11.0 ou superior instalado
-> - Instale o [Yarn](https://yarnpkg.com/)
-> - Instale o MongoDB localmente ou Utilize o Docker para roda o mesmo [Docker](https://hub.docker.com/_/mongo/)
-> - Caso queira mude o endereço do Servidor Mongo [MONGO_URL](https://github.com/amagno/full-example-graphlql/blob/master/nodemon.json) no arquivo [nodemon.js](https://github.com/amagno/full-example-graphlql/blob/master/nodemon.json) 
+## Requisitos
+> - [Node.js](https://nodejs.org/) 6.11.0 ou superior instalado
+> - [Yarn](https://yarnpkg.com/)
+```shell
+npm i -g yarn
+```
+> - MongoDB(https://www.mongodb.com/download-center#community) *Utilize o Docker ;) [Docker](https://hub.docker.com/_/mongo/)
+> - Mude o endereço do Servidor MongoDB [MONGO_URL](https://github.com/amagno/full-example-graphlql/blob/master/nodemon.json) e no arquivo [nodemon.js](https://github.com/amagno/full-example-graphlql/blob/master/nodemon.json)
+
+## Dev
 ```shell
 yarn install
 yarn watch
